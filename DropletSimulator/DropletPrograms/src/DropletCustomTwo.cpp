@@ -8,8 +8,8 @@ const uint8_t DropletCustomTwo::led_state_colors[NUM_STATES][3] = {
 	{  0, 200,   0},
 };
 
-DropletCustomTwo::DropletCustomTwo(ObjectPhysicsData *objPhysics) 
-	: DSimDroplet(objPhysics) {}
+DropletCustomTwo::DropletCustomTwo(ObjectPhysicsData *phyData) 
+	: DSimDroplet(phyData) {}
 
 DropletCustomTwo::~DropletCustomTwo() {}
 
@@ -114,7 +114,7 @@ void DropletCustomTwo::leading_group()
 	if(run_sigmoid())
 		collaborators++;
 
-	std::vector<droplet_id_type>::iterator pos;
+	std::vector<object_id_t>::iterator pos;
 
 	uint8_t state_changed = 0;
 	while(check_for_new_messages())

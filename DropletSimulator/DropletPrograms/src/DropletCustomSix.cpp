@@ -11,8 +11,8 @@ const float phi_cclk[] = { -60.f, 0.f, 60.f, 120.f, 180.f, -120.f};
 const float theta_clk  = -90.f;
 const float theta_cclk = 90.f; 
 
-DropletCustomSix::DropletCustomSix(ObjectPhysicsData *objPhysics) 
-	: DSimDroplet(objPhysics) 
+DropletCustomSix::DropletCustomSix(ObjectPhysicsData *phyData) 
+	: DSimDroplet(phyData) 
 {	return; }
 
 
@@ -253,7 +253,7 @@ void DropletCustomSix::handle_msgs(void)
 	{
 		char *in_msg = (char *)malloc(global_rx_buffer.data_len);
 		memcpy(in_msg, global_rx_buffer.buf, global_rx_buffer.data_len);
-		droplet_id_type sender_id = global_rx_buffer.sender_ID;
+		object_id_t sender_id = global_rx_buffer.sender_ID;
 		global_rx_buffer.read = true;
 
 		switch(in_msg[0])

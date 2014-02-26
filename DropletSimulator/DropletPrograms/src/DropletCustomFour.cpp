@@ -3,8 +3,8 @@
 #define NUMBER_OF_ITS 5
 const char got_you = 'x';
 
-DropletCustomFour::DropletCustomFour(ObjectPhysicsData *objPhysics) 
-	: DSimDroplet(objPhysics) 
+DropletCustomFour::DropletCustomFour(ObjectPhysicsData *phyData) 
+	: DSimDroplet(phyData) 
 { return; }
 
 DropletCustomFour::~DropletCustomFour() { return; }
@@ -77,7 +77,7 @@ void DropletCustomFour::DropletMainLoop()
 		while(check_for_new_messages())
 		{
 			bool seen = false;
-			for(std::vector<droplet_id_type>::iterator iter = other_droplets.begin() ;  iter != other_droplets.end(); ++iter)
+			for(std::vector<object_id_t>::iterator iter = other_droplets.begin() ;  iter != other_droplets.end(); ++iter)
 			{
 				if(*iter== global_rx_buffer.sender_ID)
 				{
@@ -101,7 +101,7 @@ void DropletCustomFour::DropletMainLoop()
 		if(notit_init_required && it_init_required)
 		{
 			std::sort(other_droplets.begin(), other_droplets.end());
-			std::vector<droplet_id_type>::iterator it;
+			std::vector<object_id_t>::iterator it;
 
 			for(unsigned int i=0 ; i<NUMBER_OF_ITS ; i++)
 			{
@@ -176,7 +176,7 @@ void DropletCustomFour::DropletMainLoop()
 					char msg[3];
 					memset(msg, 0, 3);
 					msg[0] = got_you;
-					memcpy(&msg[1], &target_id, sizeof(droplet_id_type));
+					memcpy(&msg[1], &target_id, sizeof(object_id_t));
 					ir_broadcast(msg, 3);
 					wait_for_ack = true;
 				}
@@ -210,7 +210,7 @@ void DropletCustomFour::DropletMainLoop()
 						it_init_required = true;
 						char ack[3];
 						ack[0] = 1;
-						memcpy(&ack[1],	&(global_rx_buffer.sender_ID), sizeof(droplet_id_type));
+						memcpy(&ack[1],	&(global_rx_buffer.sender_ID), sizeof(object_id_t));
 						ir_broadcast(ack, 3);
 						break;
 					}

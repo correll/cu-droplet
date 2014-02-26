@@ -27,7 +27,7 @@ private :
 	}state;
 
 	char ack;
-	droplet_id_type target;
+	object_id_t target;
 	uint8_t layer_num, counter, needed, id;
 	bool is_set_rgb, move_rgb, wait_rgb, call_rgb;
 	bool mover, corner, first_set, layer_set;
@@ -35,7 +35,7 @@ private :
 	uint8_t get_next_id();
 	
 public :
-	DropletCustomThree(ObjectPhysicsData *objPhysics);
+	DropletCustomThree(ObjectPhysicsData *phyData);
 	~DropletCustomThree(void);
 
 	

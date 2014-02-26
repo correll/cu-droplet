@@ -7,7 +7,7 @@
 
 #include "DSimDataStructs.h"
 #include "DSimGlobals.h"
-#include "DSimTimeControl.h"
+#include "DSimTiming.h"
 #include "DSimProjection.h"
 #include "DSimUtil.h"
 #include "DSimDroplet.h"
@@ -60,14 +60,14 @@ private :
 	 * \deprecated
 	 * Initialises a physics object.
 	 *
-	 * \param [in,out]	objPhysics	If non-null, the object physics.
+	 * \param [in,out]	phyData	If non-null, the object physics.
 	 * \param [in,out]	origin	  	The origin.
 	 *
 	 * \return	.
 	 */
 
 	DS_RESULT initPhysicsObject(
-		ObjectPhysicsData *objPhysics, btVector3 &origin);
+		ObjectPhysicsData *phyData, btVector3 &origin);
 
 
 	/**
@@ -86,7 +86,7 @@ private :
 	 * Set Power to droplet legs
 	 */
 
-	void setLegPower(DSimDroplet *pDroplet, GPSInfo *gpsInfo);
+	void setLegPower(DSimDroplet *pDroplet, ObjectLocalizationData *ObjectLocalizationData);
 
 	/**
 	 * Sensor controller.
@@ -135,16 +135,16 @@ protected :
 	 * Vector containing droplet positions.
 	 */
 
-//	std::vector<GPSInfo *> dropletPositions;
+//	std::vector<ObjectLocalizationData *> dropletPositions;
 //	TrigArray *dropletRelPos;
 
 	/**
 	 * Vector containing physical object positions (other than droplets).
 	 */
-	std::vector<GPSInfo *> objectPositions;
+	std::vector<ObjectLocalizationData *> objectPositions;
 	
 	// time info class
-	DSimTimeControl timer;
+	DSimTiming timer;
 
 public :
 

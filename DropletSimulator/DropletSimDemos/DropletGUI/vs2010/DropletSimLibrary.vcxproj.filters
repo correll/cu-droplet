@@ -66,13 +66,13 @@
     <ClCompile Include="..\..\..\DropletSimLibrary\src\DSimPhysicalObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\DropletSimLibrary\src\DSimUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\DropletSimLibrary\src\DSimProjection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\DropletSimLibrary\src\DSimTimeControl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\DropletSimLibrary\src\DSimUtil.cpp">
+    <ClCompile Include="..\..\..\DropletSimLibrary\src\DSimTiming.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -125,16 +125,31 @@
     <ClInclude Include="..\..\..\DropletSimLibrary\include\DSimGlobals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\DropletSimLibrary\include\DSimPhysicalObject.h">
+    <ClInclude Include="..\..\..\DropletSimLibrary\include\DSimUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\DropletSimLibrary\include\DSimProjection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\DropletSimLibrary\include\DSimTimeControl.h">
+    <ClInclude Include="..\..\..\DropletSimLibrary\include\DSimTiming.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\DropletSimLibrary\include\DSimUtil.h">
+    <ClInclude Include="..\..\..\DropletSimLibrary\include\DSimCommControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\DropletSimLibrary\include\DSimControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\DropletSimLibrary\include\DSimMotionControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\DropletSimLibrary\include\DSimPhysicalObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\DropletSimLibrary\include\DSimSensorControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\DropletSimLibrary\include\DSimTimerControl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

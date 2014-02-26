@@ -143,17 +143,17 @@ signals:
 
 		/**
 		* \fn	void RenderWidget::requestNewDroplet(float x, float y, droplet_t dType = CustomOne,
-		* 		int dropletID = 0);
+		* 		int objectID = 0);
 		*
 		* \brief	Request new droplet.
 		*
 		* \param	x		 	The x coordinate.
 		* \param	y		 	The y coordinate.
 		* \param	dType	 	(Optional) the type.
-		* \param	dropletID	(Optional) identifier for the droplet.
+		* \param	objectID	(Optional) identifier for the droplet.
 		*/
 
-		void requestNewDroplet(float x, float y, droplet_t dType = CustomOne, int dropletID = 0);
+		void requestNewDroplet(float x, float y, droplet_t dType = CustomOne, int objectID = 0);
 
 		/**
 		* \fn	void RenderWidget::toggleLimit(void);

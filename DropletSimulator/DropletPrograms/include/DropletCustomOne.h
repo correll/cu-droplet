@@ -23,11 +23,11 @@ private :
 	} state;
 
 	char ack;
-	droplet_id_type target;
+	object_id_t target;
 	bool target_set_rgb, walker_set_rgb, toggle;
 	
 public :
-	DropletCustomOne(ObjectPhysicsData *objPhysics);
+	DropletCustomOne(ObjectPhysicsData *phyData);
 	~DropletCustomOne(void);
 
 	

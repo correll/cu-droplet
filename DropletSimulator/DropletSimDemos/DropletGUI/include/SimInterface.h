@@ -286,17 +286,17 @@ public slots:
 
 	/**
 	 * \fn	void SimInterface::addDroplet(float x, float y, droplet_t dType = CustomOne,
-	 * 		int dropletID = 0);
+	 * 		int objectID = 0);
 	 *
 	 * \brief	Adds a droplet.
 	 *
 	 * \param	x		 	The x coordinate.
 	 * \param	y		 	The y coordinate.
 	 * \param	dType	 	(Optional) The droplet program type.
-	 * \param	dropletID	(Optional) The Droplet ID. If 0, adds one to the current number of droplets.
+	 * \param	objectID	(Optional) The Droplet ID. If 0, adds one to the current number of droplets.
 	 */
 
-	void addDroplet(float x, float y, droplet_t dType = CustomOne, int dropletID = 0);
+	void addDroplet(float x, float y, droplet_t dType = CustomOne, int objectID = 0);
 
 	/**
 	 * \fn	int SimInterface::addNewShape(object_t objectType, float radius, vec3 scale);
@@ -570,15 +570,15 @@ private:
 	 * \brief	The droplet position.
 	 */
 
-	std::vector<GPSInfo *> *_dropletPos;
-	std::vector<DropletCommData *> *_dropletComm;
+	std::vector<ObjectLocalizationData *> *_dropletPos;
+	std::vector<ObjectCommData *> *_dropletComm;
 
 	/**
 	 * \brief	The object position.
 	 */
 
-	std::vector<GPSInfo *> *_objectPos;
-	DSimTimeControl *_timer;
+	std::vector<ObjectLocalizationData *> *_objectPos;
+	DSimTiming *_timer;
 
 	/**
 	 * \brief	The tile positions and corresponding wall booleans for each tile.

@@ -66,7 +66,7 @@ private :
 	void find_rqrd_pos(bool last_element);
 	void transition_from_seach(State new_state);
 public :
-	DropletCustomSix(ObjectPhysicsData *objPhysics);
+	DropletCustomSix(ObjectPhysicsData *phyData);
 	~DropletCustomSix(void);
 
 	

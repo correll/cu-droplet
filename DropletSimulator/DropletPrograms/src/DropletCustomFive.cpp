@@ -12,8 +12,8 @@ const int guitar_rows[] = {
 	/* Neck  2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 	/* Head  3, 4, 3, 2, 0}; */
 
-DropletCustomFive::DropletCustomFive(ObjectPhysicsData *objPhysics) 
-	: DSimDroplet(objPhysics) 
+DropletCustomFive::DropletCustomFive(ObjectPhysicsData *phyData) 
+	: DSimDroplet(phyData) 
 {   neighbors = (uint8_t*)malloc(sizeof(uint8_t) * 6);
 	return; }
 

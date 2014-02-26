@@ -27,12 +27,12 @@ class DSimDroplet
 {
 private :
 
-	ObjectPhysicsData *objPhysics;
-	DropletActuatorData *actData;
-	DropletSensorData *senseData;
-	DropletCommData *commData;
-	DropletCompData *compData;
-	DropletTimeData *timeData;
+	ObjectPhysicsData *phyData;
+	ObjectActuationData *actData;
+	ObjectSensorData *senseData;
+	ObjectCommData *commData;
+	ObjectPowerData *compData;
+	ObjectTimerData *timeData;
 	
 	/** \name Simulator backend functions  
 	 *  
@@ -47,12 +47,12 @@ private :
 	 * DO NOT USE THESE IN ANY CODE WRITTEN FOR A CLASS DERIVED FROM DSimDroplet!!!
 	 *
 	 * \param [in,out]	pDroplet  	If non-null, the droplet.
-	 * \param [in,out]	objPhysics	If non-null, the object physics.
+	 * \param [in,out]	phyData	If non-null, the object physics.
 	 */
 
-	friend void AccessPhysicsData(DSimDroplet *pDroplet, ObjectPhysicsData **objPhysics)
+	friend void AccessPhysicsData(DSimDroplet *pDroplet, ObjectPhysicsData **phyData)
 	{
-		*objPhysics = pDroplet->objPhysics;
+		*phyData = pDroplet->phyData;
 	}
 
 	/**
@@ -65,7 +65,7 @@ private :
 	 * \param [in,out]	actData 	If non-null, information describing the act.
 	 */
 
-	friend void AccessActuatorData(DSimDroplet *pDroplet, DropletActuatorData **actData)
+	friend void AccessActuatorData(DSimDroplet *pDroplet, ObjectActuationData **actData)
 	{
 		*actData = pDroplet->actData;
 	}
@@ -80,7 +80,7 @@ private :
 	 * \param [in,out]	senseData	If non-null, information describing the sense.
 	 */
 
-	friend void AccessSensorData(DSimDroplet *pDroplet, DropletSensorData **senseData)
+	friend void AccessSensorData(DSimDroplet *pDroplet, ObjectSensorData **senseData)
 	{
 		*senseData = pDroplet->senseData;
 	}
@@ -95,7 +95,7 @@ private :
 	 * \param [in,out]	commData	If non-null, information describing the communications.
 	 */
 
-	friend void AccessCommData(DSimDroplet *pDroplet, DropletCommData **commData)
+	friend void AccessCommData(DSimDroplet *pDroplet, ObjectCommData **commData)
 	{
 		*commData = pDroplet->commData;
 	}
@@ -110,21 +110,21 @@ private :
 	 * \param [in,out]	compData	If non-null, information describing the component.
 	 */
 
-	friend void AccessCompData(DSimDroplet *pDroplet, DropletCompData **compData)
+	friend void AccessCompData(DSimDroplet *pDroplet, ObjectPowerData **compData)
 	{
 		*compData = pDroplet->compData;
 	}
 
 
-	friend void AccessTimeData(DSimDroplet *pDroplet, DropletTimeData **timeData)
+	friend void AccessTimeData(DSimDroplet *pDroplet, ObjectTimerData **timeData)
 	{
 		*timeData = pDroplet->timeData;
 	}
 
 protected :
 
-	DropletStatData *statData;
-	friend void AccessStatData(DSimDroplet *pDroplet, DropletStatData **statData)
+	ObjectStatus *statData;
+	friend void AccessStatData(DSimDroplet *pDroplet, ObjectStatus **statData)
 	{
 		*statData = pDroplet->statData;
 	}
@@ -172,7 +172,7 @@ protected :
 	 *
 	 * \return	The droplet identifier.
 	 */
-	droplet_id_type get_droplet_id(void);
+	object_id_t get_droplet_id(void);
 
 	/**
 	 * Gets a random number between 0 and 255 (inclusive).
@@ -449,7 +449,7 @@ public :
 									 * successfully received the message */
 
 			uint16_t data_len;	// Stores size of data in buf, i.e. just msg size
-			droplet_id_type sender_ID;	// to be copied from the header
+			object_id_t sender_ID;	// to be copied from the header
 
 			uint16_t message_time;
 
@@ -459,9 +459,9 @@ public :
 	/**
 	 * Constructor.
 	 *
-	 * \param [in,out]	objPhysics	If non-null, the object physics.
+	 * \param [in,out]	phyData	If non-null, the object physics.
 	 */
-	DSimDroplet(ObjectPhysicsData *objPhysics);
+	DSimDroplet(ObjectPhysicsData *phyData);
 
 	/**
 	 * Destructor.

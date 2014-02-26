@@ -1,8 +1,8 @@
 #include "DSimPhysicalObject.h"
 
-DSimPhysicalObject::DSimPhysicalObject(ObjectPhysicsData *objPhysics)
+DSimPhysicalObject::DSimPhysicalObject(ObjectPhysicsData *phyData)
 {
-	this->objPhysics = objPhysics;
+	this->phyData = phyData;
 }
 
 DS_RESULT DSimPhysicalObject::_InitPhysics(
@@ -10,7 +10,7 @@ DS_RESULT DSimPhysicalObject::_InitPhysics(
 		std::pair<float, float> startPosition,
 		float startAngle)
 {
-	btCollisionShape *colShape = simPhysics->collisionShapes->at(objPhysics->colShapeIndex);
+	btCollisionShape *colShape = simPhysics->collisionShapes->at(phyData->colShapeIndex);
 	
 	btTransform temp;
 	temp.setIdentity();
@@ -31,12 +31,12 @@ DS_RESULT DSimPhysicalObject::_InitPhysics(
 		float startAngle)
 {
 	// Set up the bullet physics object for this Object
-	btCollisionShape *colShape = simPhysics->collisionShapes->at(objPhysics->colShapeIndex);
+	btCollisionShape *colShape = simPhysics->collisionShapes->at(phyData->colShapeIndex);
 
-	//rigidbody is dynamic if and only if objPhysics->mass is non zero, otherwise static
-	bool isDynamic = (objPhysics->mass != 0.f);
+	//rigidbody is dynamic if and only if phyData->mass is non zero, otherwise static
+	bool isDynamic = (phyData->mass != 0.f);
 	if (isDynamic)
-		colShape->calculateLocalInertia(objPhysics->mass, objPhysics->localInertia);
+		colShape->calculateLocalInertia(phyData->mass, phyData->localInertia);
 
 	// Set the Object's initial position in the world. Remember that bullet uses a Y-Up coord system
 	btTransform startTransform;
@@ -61,12 +61,12 @@ DS_RESULT DSimPhysicalObject::_InitPhysics(
 	// Add this Object as a rigid body in the physics sim
 	btDefaultMotionState* motionState = new btDefaultMotionState(startTransform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(
-		objPhysics->mass, 
+		phyData->mass, 
 		motionState, 
 		colShape, 
-		objPhysics->localInertia
+		phyData->localInertia
 	);
-	rbInfo.m_friction = objPhysics->friction;
+	rbInfo.m_friction = phyData->friction;
 
 	if(isDynamic)
 	{
@@ -99,7 +99,7 @@ DS_RESULT DSimPhysicalObject::_InitPhysics(
 	}
 
 	// Set the Object's world ID
-	objPhysics->_worldID = simPhysics->_physicsWorldObjCounter++;
+	phyData->_worldID = simPhysics->_physicsWorldObjCounter++;
 
 	return DS_SUCCESS;
 }

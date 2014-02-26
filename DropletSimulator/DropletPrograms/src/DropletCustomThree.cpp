@@ -3,8 +3,8 @@
 const int circle_layers[] = { 1, 6, 12, 18, 24, 30 };
 
 
-DropletCustomThree::DropletCustomThree(ObjectPhysicsData *objPhysics) 
-	: DSimDroplet(objPhysics) 
+DropletCustomThree::DropletCustomThree(ObjectPhysicsData *phyData) 
+	: DSimDroplet(phyData) 
 {   return; }
 
 DropletCustomThree::~DropletCustomThree() 

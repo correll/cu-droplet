@@ -6,7 +6,7 @@
  * cannot be included in DSimDroplet.h but dropletRelPos is affected by it. 
  */
 extern TrigArray *dropletRelPos; // Welcome to the DAINJA' ZONE!
-extern std::vector<GPSInfo *> dropletPositions;
+extern std::vector<ObjectLocalizationData *> dropletPositions;
 
 float prettyAngle(float ang){
 	ang = fmodf(ang,360);
@@ -20,28 +20,28 @@ float prettyAngle(float ang){
 
 
 // Constructors and Destructor
-DSimDroplet::DSimDroplet(ObjectPhysicsData *objPhysics)
+DSimDroplet::DSimDroplet(ObjectPhysicsData *phyData)
 {
-	this->objPhysics = objPhysics;
-	actData		= (DropletActuatorData *)malloc(sizeof(DropletActuatorData));
-	senseData	= (DropletSensorData *)malloc(sizeof(DropletSensorData));
-	commData	= (DropletCommData *)malloc(sizeof(DropletCommData));
-	compData	= (DropletCompData *)malloc(sizeof(DropletCompData));
-	timeData	= (DropletTimeData *)malloc(sizeof(DropletTimeData));
-	statData	= (DropletStatData *)malloc(sizeof(DropletStatData));
+	this->phyData = phyData;
+	actData		= (ObjectActuationData *)malloc(sizeof(ObjectActuationData));
+	senseData	= (ObjectSensorData *)malloc(sizeof(ObjectSensorData));
+	commData	= (ObjectCommData *)malloc(sizeof(ObjectCommData));
+	compData	= (ObjectPowerData *)malloc(sizeof(ObjectPowerData));
+	timeData	= (ObjectTimerData *)malloc(sizeof(ObjectTimerData));
+	statData	= (ObjectStatus *)malloc(sizeof(ObjectStatus));
 	this->global_rx_buffer.buf = (uint8_t *)malloc(sizeof(uint8_t) * IR_BUFFER_SIZE);
 }
 	
 DSimDroplet::~DSimDroplet()
 {
-	free(objPhysics);
+	free(phyData);
 	free(actData);
 	free(senseData);
 	free(commData);
 	free(compData);
 	free(statData);
 
-	objPhysics = NULL;
+	phyData = NULL;
 	actData = NULL;
 	senseData = NULL;
 	commData = NULL;
@@ -54,9 +54,9 @@ DS_RESULT DSimDroplet::_InitPhysics(
 	float startAngle)
 {
 	// Set up the bullet physics object for this Droplet
-	btCollisionShape *colShape = simPhysics->collisionShapes->at(objPhysics->colShapeIndex);
+	btCollisionShape *colShape = simPhysics->collisionShapes->at(phyData->colShapeIndex);
 
-	colShape->calculateLocalInertia(objPhysics->mass, objPhysics->localInertia);
+	colShape->calculateLocalInertia(phyData->mass, phyData->localInertia);
 	btTransform temp;
 	temp.setIdentity();
 	btVector3 tmpHolder1, tmpHolder2; // Don't really need this for anything besides calling getBoundingSphere
@@ -87,12 +87,12 @@ DS_RESULT DSimDroplet::_InitPhysics(
 	// Add this Droplet as a rigid body in the physics sim
 	btDefaultMotionState* motionState = new btDefaultMotionState(startTransform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(
-		objPhysics->mass, 
+		phyData->mass, 
 		motionState, 
 		colShape, 
-		objPhysics->localInertia
+		phyData->localInertia
 	);
-	rbInfo.m_friction = objPhysics->friction;
+	rbInfo.m_friction = phyData->friction;
 	rbInfo.m_linearDamping = DROPLET_LINEAR_DAMPING;		// Add a damping coefficient
 	rbInfo.m_angularDamping = DROPLET_ANGULAR_DAMPING;
 
@@ -112,8 +112,8 @@ DS_RESULT DSimDroplet::_InitPhysics(
 			SimPhysicsData::_dynObjCollisionBM); // Droplet collides with these objects
 
 	// Set the Droplet's ID
-	objPhysics->_worldID = simPhysics->_physicsWorldObjCounter++;
-	compData->dropletID = static_cast<droplet_id_type>(objPhysics->_worldID + DROPLET_ID_START);
+	phyData->_worldID = simPhysics->_physicsWorldObjCounter++;
+	objectID = static_cast<object_id_t>(phyData->_worldID + DROPLET_ID_START);
 
 	return DS_SUCCESS;
 }
@@ -187,9 +187,9 @@ void DSimDroplet::reset_timers()
 	}
 }
 
-droplet_id_type DSimDroplet::get_droplet_id()
+object_id_t DSimDroplet::get_droplet_id()
 {
-	return compData->dropletID;
+	return objectID;
 }
 
 uint8_t DSimDroplet::rand_byte(void)
@@ -420,11 +420,11 @@ uint8_t DSimDroplet::ir_send(uint8_t channel, const char *send_buf, uint8_t leng
 	//commData->commChannels[sendChannel].outMsgLength = 0;
 
 	// Store the sending droplet's id as part of the message header
-	memcpy(commData->commChannels[sendChannel].outBuf, &(compData->dropletID), sizeof(droplet_id_type));
+	memcpy(commData->commChannels[sendChannel].outBuf, &(compData->objectID), sizeof(object_id_t));
 
 	// Store the rest of the message header, then body
 	uint8_t msgLength = length < IR_MAX_DATA_SIZE ? length : IR_MAX_DATA_SIZE;
-	memcpy(&commData->commChannels[sendChannel].outBuf[sizeof(droplet_id_type)], &msgLength, sizeof(uint8_t));
+	memcpy(&commData->commChannels[sendChannel].outBuf[sizeof(object_id_t)], &msgLength, sizeof(uint8_t));
 	memcpy(&commData->commChannels[sendChannel].outBuf[IR_MSG_HEADER], send_buf, msgLength);
 	commData->commChannels[sendChannel].outMsgLength = msgLength + IR_MSG_HEADER;
 
@@ -475,7 +475,7 @@ uint8_t DSimDroplet::check_for_new_messages(void)
 		memcpy(
 			&global_rx_buffer.sender_ID,
 			commData->commChannels[newMsgCh].inBuf,
-			sizeof(droplet_id_type));
+			sizeof(object_id_t));
 
 		// Clean out this message from the in buffer
 		commData->commChannels[newMsgCh].inMsgLength = 0;
@@ -505,12 +505,12 @@ uint8_t DSimDroplet::range_and_bearing(uint16_t partner_id, float *dist, float *
 {
 	float angle;
 	unsigned int partner_world_id = static_cast<unsigned int>(partner_id - DROPLET_ID_START);
-	unsigned int data_id_diff = this->objPhysics->_worldID - this->objPhysics->_dataID;
+	unsigned int data_id_diff = this->phyData->_worldID - this->phyData->_dataID;
 	unsigned int partner_data_id = partner_world_id - data_id_diff;
 
 	// Get distance and relative angle
 	if(dropletRelPos->GetData(
-		this->objPhysics->_dataID, 
+		this->phyData->_dataID, 
 		partner_data_id, 
 		dist, 
 		&angle) != DS_SUCCESS)
@@ -521,10 +521,10 @@ uint8_t DSimDroplet::range_and_bearing(uint16_t partner_id, float *dist, float *
 
 	// Find Theta
 	float tauRX;
-	if(dropletPositions[this->objPhysics->_dataID]->rotZ < 0)
-		tauRX = dropletPositions[this->objPhysics->_dataID]->rotA * -180 / SIMD_PI;
+	if(dropletPositions[this->phyData->_dataID]->rotZ < 0)
+		tauRX = dropletPositions[this->phyData->_dataID]->rotA * -180 / SIMD_PI;
 	else
-		tauRX = dropletPositions[this->objPhysics->_dataID]->rotA * 180 / SIMD_PI;
+		tauRX = dropletPositions[this->phyData->_dataID]->rotA * 180 / SIMD_PI;
 	*theta = prettyAngle(angle - tauRX);
 
 	// Find Phi

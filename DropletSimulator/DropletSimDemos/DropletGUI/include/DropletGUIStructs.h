@@ -181,12 +181,12 @@ enum droplet_t {
  */
 
 struct dropletStruct_t {
-	int dropletID;
+	int objectID;
 	vec3 origin;
 	vec3 rotation;
 	vec4 quaternion;
 	vec3i color;
-	DropletCommData commData;
+	ObjectCommData commData;
 	bool changed;
 };
 

@@ -2,19 +2,19 @@
 #include "DSim.h"
 #include "DSimDroplet.h"
 
-extern std::vector<GPSInfo *> dropletPositions;
+extern std::vector<ObjectLocalizationData *> dropletPositions;
 
-DS_RESULT DSimDataLogger::GetDropletPositions(std::vector<GPSInfo *> *outPosData, DSim& simulator)
+DS_RESULT DSimDataLogger::GetDropletPositions(std::vector<ObjectLocalizationData *> *outPosData, DSim& simulator)
 {
 
-	std::vector<GPSInfo *>::iterator in_it, p_it;
+	std::vector<ObjectLocalizationData *>::iterator in_it, p_it;
 	p_it = /*simulator.*/dropletPositions.begin();
 
 	for(in_it = outPosData->begin(); in_it < outPosData->end(); in_it++)
 	{
-		GPSInfo *outDat, *dat;
-		outDat = (GPSInfo *)*in_it;
-		dat = (GPSInfo *)*p_it;
+		ObjectLocalizationData *outDat, *dat;
+		outDat = (ObjectLocalizationData *)*in_it;
+		dat = (ObjectLocalizationData *)*p_it;
 		outDat->posX = dat->posX;
 		outDat->posY = dat->posY;
 		outDat->posZ = dat->posZ;
@@ -30,17 +30,17 @@ DS_RESULT DSimDataLogger::GetDropletPositions(std::vector<GPSInfo *> *outPosData
 	return DS_SUCCESS;
 }
 
-DS_RESULT DSimDataLogger::GetObjectPositions(std::vector<GPSInfo *> *outPosData, DSim& simulator)
+DS_RESULT DSimDataLogger::GetObjectPositions(std::vector<ObjectLocalizationData *> *outPosData, DSim& simulator)
 {
 
-	std::vector<GPSInfo *>::iterator in_it, p_it;
+	std::vector<ObjectLocalizationData *>::iterator in_it, p_it;
 	p_it = simulator.objectPositions.begin();
 
 	for(in_it = outPosData->begin(); in_it < outPosData->end(); in_it++)
 	{
-		GPSInfo *outDat, *dat;
-		outDat = (GPSInfo *)*in_it;
-		dat = (GPSInfo *)*p_it;
+		ObjectLocalizationData *outDat, *dat;
+		outDat = (ObjectLocalizationData *)*in_it;
+		dat = (ObjectLocalizationData *)*p_it;
 		outDat->posX = dat->posX;
 		outDat->posY = dat->posY;
 		outDat->posZ = dat->posZ;
@@ -65,7 +65,7 @@ DS_RESULT DSimDataLogger::GetDropletColors(std::vector<uint8_t *> *colors, DSim&
 	for(d_it = simulator.droplets.begin(); d_it < simulator.droplets.end(); d_it++)
 	{
 		DSimDroplet *pDroplet = *d_it;
-		DropletActuatorData *actData;
+		ObjectActuationData *actData;
 		AccessActuatorData(pDroplet, &actData);
 
 		uint8_t *outColor = (uint8_t *)*c_it;
@@ -89,7 +89,7 @@ DS_RESULT DSimDataLogger::GetRemainingMotionTimes(std::vector<float *> *times, D
 	for(d_it = simulator.droplets.begin(); d_it < simulator.droplets.end(); d_it++)
 	{
 		DSimDroplet *pDroplet = *d_it;
-		DropletActuatorData *actData;
+		ObjectActuationData *actData;
 		AccessActuatorData(pDroplet, &actData);
 
 		float *outTime = (float *)*c_it;
@@ -112,7 +112,7 @@ DS_RESULT DSimDataLogger::GetMotionDirections(std::vector<DirInfo *> *directions
 	for(d_it = simulator.droplets.begin(); d_it < simulator.droplets.end(); d_it++)
 	{
 		DSimDroplet *pDroplet = *d_it;
-		DropletActuatorData *actData;
+		ObjectActuationData *actData;
 		AccessActuatorData(pDroplet, &actData);
 
 		DirInfo *outDir = (DirInfo *)*c_it;
@@ -135,7 +135,7 @@ DS_RESULT DSimDataLogger::GetSensorColors(std::vector<uint8_t *> *colors, DSim& 
 	for(d_it = simulator.droplets.begin(); d_it < simulator.droplets.end(); d_it++)
 	{
 		DSimDroplet *pDroplet = *d_it;
-		DropletSensorData *senseData;
+		ObjectSensorData *senseData;
 		AccessSensorData(pDroplet, &senseData);
 
 		uint8_t *outColor = (uint8_t *)*c_it;
@@ -176,19 +176,19 @@ DS_RESULT DSimDataLogger::GetPhysData(std::vector<ObjectPhysicsData *> *phys, DS
 	return DS_SUCCESS;
 }
 
-DS_RESULT DSimDataLogger::GetCommData(std::vector<DropletCommData *> *comm, DSim& simulator)
+DS_RESULT DSimDataLogger::GetCommData(std::vector<ObjectCommData *> *comm, DSim& simulator)
 {
 	std::vector<DSimDroplet *>::iterator d_it;
-	std::vector<DropletCommData *>::iterator c_it;
+	std::vector<ObjectCommData *>::iterator c_it;
 	c_it = comm->begin();
 
 	for(d_it = simulator.droplets.begin(); d_it < simulator.droplets.end(); d_it++)
 	{
 		DSimDroplet *pDroplet = *d_it;
-		DropletCommData *commData;
+		ObjectCommData *commData;
 		AccessCommData(pDroplet, &commData);
 
-		DropletCommData *outComm = (DropletCommData *)*c_it;
+		ObjectCommData *outComm = (ObjectCommData *)*c_it;
 		outComm->sendActive = commData->sendActive;
 		int i;
 		for (i = 0; i < 6; i++)
@@ -213,24 +213,24 @@ DS_RESULT DSimDataLogger::GetCommData(std::vector<DropletCommData *> *comm, DSim
 	return DS_SUCCESS;
 }
 
-DS_RESULT DSimDataLogger::GetCompData(std::vector<DropletCompData *> *comp, DSim& simulator)
+DS_RESULT DSimDataLogger::GetCompData(std::vector<ObjectPowerData *> *comp, DSim& simulator)
 {
 	std::vector<DSimDroplet *>::iterator d_it;
-	std::vector<DropletCompData *>::iterator c_it;
+	std::vector<ObjectPowerData *>::iterator c_it;
 	c_it = comp->begin();
 
 	for(d_it = simulator.droplets.begin(); d_it < simulator.droplets.end(); d_it++)
 	{
 		DSimDroplet *pDroplet = *d_it;
-		DropletCompData *compData;
+		ObjectPowerData *compData;
 		AccessCompData(pDroplet, &compData);
 
-		DropletCompData *outComp = (DropletCompData *)*c_it;
+		ObjectPowerData *outComp = (ObjectPowerData *)*c_it;
 		outComp->leg1Status = compData->leg1Status;
 		outComp->leg2Status = compData->leg2Status;
 		outComp->leg3Status = compData->leg3Status;
 		outComp->capStatus = compData->capStatus;
-		outComp->dropletID = compData->dropletID;
+		outComp->objectID = compData->objectID;
 
 		if(c_it < comp->end())
 			c_it++;
@@ -239,19 +239,19 @@ DS_RESULT DSimDataLogger::GetCompData(std::vector<DropletCompData *> *comp, DSim
 	return DS_SUCCESS;
 }
 
-DS_RESULT DSimDataLogger::GetActuationData(std::vector<DropletActuatorData *> *act, DSim &simulator)
+DS_RESULT DSimDataLogger::GetActuationData(std::vector<ObjectActuationData *> *act, DSim &simulator)
 {
 	std::vector<DSimDroplet *>::iterator d_it;
-	std::vector<DropletActuatorData *>::iterator c_it;
+	std::vector<ObjectActuationData *>::iterator c_it;
 	c_it = act->begin();
 
 	for(d_it = simulator.droplets.begin(); d_it < simulator.droplets.end(); d_it++)
 	{
 		DSimDroplet *pDroplet = *d_it;
-		DropletActuatorData *actData;
+		ObjectActuationData *actData;
 		AccessActuatorData(pDroplet, &actData);
 
-		DropletActuatorData *outAct = (DropletActuatorData *)*c_it;
+		ObjectActuationData *outAct = (ObjectActuationData *)*c_it;
 		outAct->rOut = actData->rOut;
 		outAct->gOut = actData->gOut;
 		outAct->bOut = actData->bOut;

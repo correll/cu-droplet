@@ -18,10 +18,23 @@
 
 class DSimPhysicalObject
 {
-public:
-	ObjectPhysicsData *objPhysics;
+private:
+	ObjectPhysicsData *phyData;
+	ObjectLocalizationData *locData;
+	ObjectCapabilities *capData;
 
-	DSimPhysicalObject(ObjectPhysicsData *objPhysics);
+	ObjectActuationData *actData;
+	ObjectSensorData *senseData;
+	ObjectCommData *commData;
+	ObjectPowerData *compData;
+	ObjectTimerData *timerData;
+	ObjectLEDData *ledData;
+
+	object_id_t objectID;
+
+public:
+
+	DSimPhysicalObject(ObjectPhysicsData *phyData);
 
 	DS_RESULT _InitPhysics(
 		SimPhysicsData *simPhysics,

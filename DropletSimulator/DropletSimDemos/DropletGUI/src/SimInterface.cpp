@@ -69,10 +69,10 @@ void SimInterface::teardownSim()
 	}
 	if (_dropletPos != NULL)
 	{
-		std::vector<GPSInfo *>::iterator it;
+		std::vector<ObjectLocalizationData *>::iterator it;
 		for (it = _dropletPos->begin(); it != _dropletPos->end() ; it++)
 		{
-			GPSInfo *bob = *it;
+			ObjectLocalizationData *bob = *it;
 			free(bob); 
 		}
 		delete _dropletPos;
@@ -81,10 +81,10 @@ void SimInterface::teardownSim()
 
 	if (_dropletComm != NULL)
 	{
-		std::vector<DropletCommData *>::iterator commIt;
+		std::vector<ObjectCommData *>::iterator commIt;
 		for (commIt = _dropletComm->begin(); commIt != _dropletComm->end(); commIt++)
 		{
-			DropletCommData *bob = *commIt;
+			ObjectCommData *bob = *commIt;
 			free(bob);
 		}
 		delete _dropletComm;
@@ -95,10 +95,10 @@ void SimInterface::teardownSim()
 	if (_objectPos != NULL)
 
 	{
-		std::vector<GPSInfo *>::iterator it;
+		std::vector<ObjectLocalizationData *>::iterator it;
 		for (it = _objectPos->begin(); it != _objectPos->end() ; it++)
 		{
-			GPSInfo *bob = *it;
+			ObjectLocalizationData *bob = *it;
 			free(bob); 
 
 		}
@@ -184,13 +184,13 @@ void SimInterface::Init()
 	_sim->AddCollisionShape(_simStatus.dropletShape, &_simStatus.btDropletShapeID);
 
 	_dropletColors = new std::vector<unsigned char *>();
-	_dropletPos = new std::vector<GPSInfo *>();
+	_dropletPos = new std::vector<ObjectLocalizationData *>();
 
-	_dropletComm = new std::vector<DropletCommData *>();
+	_dropletComm = new std::vector<ObjectCommData *>();
 
-	_objectPos = new std::vector<GPSInfo *>();
+	_objectPos = new std::vector<ObjectLocalizationData *>();
 
-	_timer = (DSimTimeControl *)malloc(sizeof(DSimTimeControl));
+	_timer = (DSimTiming *)malloc(sizeof(DSimTiming));
 
 	_simState.dropletData.clear();
 	_simState.dynamicObjectData.clear();
@@ -597,27 +597,27 @@ void SimInterface::createArena()
 		}
 }
 
-void SimInterface::addDroplet( float x, float y, droplet_t dType, int dropletID )
+void SimInterface::addDroplet( float x, float y, droplet_t dType, int objectID )
 {
 	bool isPaused = _simStatus.paused;
 	_simStatus.paused = true;
 	unsigned char *tmp1 = (unsigned char *)malloc(sizeof(unsigned char) * 3);
 	_dropletColors->push_back(tmp1);
-	GPSInfo *tmp2 = (GPSInfo *)malloc(sizeof(GPSInfo));
+	ObjectLocalizationData *tmp2 = (ObjectLocalizationData *)malloc(sizeof(ObjectLocalizationData));
 	_dropletPos->push_back(tmp2);
 
-	DropletCommData *tmp3 = (DropletCommData *)malloc(sizeof(DropletCommData));
+	ObjectCommData *tmp3 = (ObjectCommData *)malloc(sizeof(ObjectCommData));
 	_dropletComm->push_back(tmp3);
 
 	dropletStruct_t droplet;
 
-	if (dropletID == 0)
+	if (objectID == 0)
 	{
 		// make up a droplet ID
-		droplet.dropletID = _simState.dropletData.count() + 1;
+		droplet.objectID = _simState.dropletData.count() + 1;
 	} else {
 
-		droplet.dropletID = dropletID;
+		droplet.objectID = objectID;
 	}
 
 	vec3 zero = {0.0f,0.0f,0.0f};
@@ -730,7 +730,7 @@ void SimInterface::addSphere( float x, float y, int objectID, float radius, floa
 
 	bool isPaused = _simStatus.paused;
 	_simStatus.paused = true;
-	GPSInfo *tmp2 = (GPSInfo *)malloc(sizeof(GPSInfo));
+	ObjectLocalizationData *tmp2 = (ObjectLocalizationData *)malloc(sizeof(ObjectLocalizationData));
 	_objectPos->push_back(tmp2);
 	objectStruct_t object;
 
@@ -784,7 +784,7 @@ void SimInterface::addCube( float x, float y, int objectID, vec3 scale, float ma
 
 	bool isPaused = _simStatus.paused;
 	_simStatus.paused = true;
-	GPSInfo *tmp2 = (GPSInfo *)malloc(sizeof(GPSInfo));
+	ObjectLocalizationData *tmp2 = (ObjectLocalizationData *)malloc(sizeof(ObjectLocalizationData));
 	_objectPos->push_back(tmp2);
 	objectStruct_t object;
 
@@ -972,21 +972,21 @@ void SimInterface::Update(float timeSinceLastUpdate)
 			_simStatus.runTime = _simInfo.GetTotalST(*_sim);
 		}
 
-		std::vector<GPSInfo *>::iterator it;
+		std::vector<ObjectLocalizationData *>::iterator it;
 		it = _dropletPos->begin();
-		std::vector<DropletCommData *>::iterator commIt;
+		std::vector<ObjectCommData *>::iterator commIt;
 		commIt = _dropletComm->begin();
 
 		for(int i = 0 ; i < _dropletPos->size(); i++)
 		{
 
 			dropletStruct_t droplet = _simState.dropletData[i];
-			GPSInfo *gpsInfo = *it;
-			DropletCommData *dropletCommData = *commIt;
+			ObjectLocalizationData *ObjectLocalizationData = *it;
+			ObjectCommData *dropletCommData = *commIt;
 			bool posChanged = false;
 
 
-			glm::quat quaternion = glm::angleAxis(gpsInfo->rotA * 180.f / SIMD_PI,gpsInfo->rotX,gpsInfo->rotY,gpsInfo->rotZ);
+			glm::quat quaternion = glm::angleAxis(ObjectLocalizationData->rotA * 180.f / SIMD_PI,ObjectLocalizationData->rotX,ObjectLocalizationData->rotY,ObjectLocalizationData->rotZ);
 			glm::vec3 rotation = glm::eulerAngles(quaternion);
 
 			vec4 newQuaternion = {
@@ -1004,9 +1004,9 @@ void SimInterface::Update(float timeSinceLastUpdate)
 
 
 			vec3 newOrigin = {
-				gpsInfo->posX,
-				gpsInfo->posY,
-				gpsInfo->posZ
+				ObjectLocalizationData->posX,
+				ObjectLocalizationData->posY,
+				ObjectLocalizationData->posZ
 			};
 
 			vec3i newColor = {
@@ -1062,17 +1062,17 @@ void SimInterface::Update(float timeSinceLastUpdate)
 		}
 
 		//Update object positions
-		std::vector<GPSInfo *>::iterator itobj;
+		std::vector<ObjectLocalizationData *>::iterator itobj;
 		itobj = _objectPos->begin();
 
 		for(int i = 0 ; i < _objectPos->size(); i++)
 		{
 
 			objectStruct_t object = _simState.dynamicObjectData[i];
-			GPSInfo *gpsInfo = *itobj;
+			ObjectLocalizationData *ObjectLocalizationData = *itobj;
 			bool posChanged = false;
 
-			glm::quat quaternion = glm::angleAxis(gpsInfo->rotA * 180.f / SIMD_PI,gpsInfo->rotX,gpsInfo->rotY,gpsInfo->rotZ);
+			glm::quat quaternion = glm::angleAxis(ObjectLocalizationData->rotA * 180.f / SIMD_PI,ObjectLocalizationData->rotX,ObjectLocalizationData->rotY,ObjectLocalizationData->rotZ);
 			glm::vec3 rotation = glm::eulerAngles(quaternion);
 
 			vec4 newQuaternion = {
@@ -1090,9 +1090,9 @@ void SimInterface::Update(float timeSinceLastUpdate)
 
 
 			vec3 newOrigin = {
-				gpsInfo->posX,
-				gpsInfo->posY,
-				gpsInfo->posZ
+				ObjectLocalizationData->posX,
+				ObjectLocalizationData->posY,
+				ObjectLocalizationData->posZ
 			};
 
 

@@ -1,6 +1,5 @@
-
 /**
- * \file	cu-droplet\DropletSimulator\DropletSimLibrary\include\DSimDataStructs.h
+ * \file	cu-object\DropletSimulator\DropletSimLibrary\include\DSimDataStructs.h
  *
  * \brief	This file contains private data structures to be used by the simulator only!
  *			Public data structures used for returning information to an external caller are 
@@ -52,101 +51,117 @@ typedef struct _Object_Physics_Data
 	btVector3 localInertia;
 	int colShapeIndex;	// Collsion Shape Index
 	unsigned int _worldID; // Physics World ID. Value READ ONLY. Set automatically by simulator.
-	unsigned int _dataID; // Index of droplet in position and other state data structs. Value is READ ONLY. Set automatically by simulator.
+	unsigned int _dataID; // Index of object in position and other state data structs. Value is READ ONLY. Set automatically by simulator.
 
 } ObjectPhysicsData;
 
+/**
+ * Defines all the capabilities an object has in the simulation.
+ */
+typedef struct _Object_Capabilities
+{
+	bool	hasActuation,
+			hasLED,
+			hasComm,
+			hasPower,
+			hasSensing,
+			hasClock;
+} ObjectCapabilities;
+
 /** 
- * Stores localization information for droplets.
+ * Stores localization information for objects.
  */
 
-typedef struct _Droplet_Localization_Data
+typedef struct _Object_Localization_Data
 {
 	float rotX, rotY, rotZ, rotA; // (rotX, rotY, rotZ) describe the axis of rotation
 	float posX, posY, posZ;
 	bool movedSinceLastUpdate;
 	double lastRelPosUpdate;
 
-}GPSInfo;
+}ObjectLocalizationData;
 
-/**
- * Defines an alias representing information describing the droplet actuator.
- */
-
-typedef struct _Droplet_Actuator_Data
+typedef struct _Object_LED_Data
 {
 	uint8_t rOut, gOut, bOut;
+	uint8_t hue, sat, bright;
+} ObjectLEDData;
+
+/**
+ * Defines an alias representing information describing the object actuator.
+ */
+
+typedef struct _Object_Actuator_Data
+{
 	float moveTimeRemaining, rotateTimeRemaining;	// in milliseconds
 	float moveStepRemaining, rotateStepRemaining;
 	bool _oscillator;
 	move_direction currMoveDir;
 	turn_direction currTurnDir;
 
-} DropletActuatorData;
+} ObjectActuationData;
 
 /**
- * Defines an alias representing information describing the droplet sensor.
+ * Defines an alias representing information describing the object sensor.
  */
 
-typedef struct _Droplet_Sensor_Data
+typedef struct _Object_Sensor_Data
 {
 	uint8_t rIn, gIn, bIn;	// Color being read by RGB sensor
 	
-} DropletSensorData;
+} ObjectSensorData;
 
 
 /**
  * Defines an internally used struct to store message information per channel.
  */
-typedef struct _Droplet_Sim_Comm_Channel_Data
+typedef struct _Object_Comm_Channel_Data
 {
 	unsigned char inBuf[IR_BUFFER_SIZE];
 	unsigned char outBuf[IR_BUFFER_SIZE];
 	uint16_t lastMsgOutTimestamp, lastMsgInTimestamp;
 	uint16_t outMsgLength, inMsgLength;
-} DropletCommChannelData;
+} ObjectCommChannelData;
 
 /**
- * Defines an alias representing information describing the droplet communication.
+ * Defines an alias representing information describing the object communication.
  */
-typedef struct _Droplet_Communication_Data
+typedef struct _Object_Comm_Data
 {
 	bool sendActive;
-	DropletCommChannelData commChannels[NUM_COMM_CHANNELS];
+	ObjectCommChannelData commChannels[NUM_COMM_CHANNELS];
 
-} DropletCommData;
+} ObjectCommData;
 
 /**
- * Defines an alias representing information describing the droplet component.
+ * Defines an alias representing information describing the object component.
  */
 
-typedef struct _Droplet_Component_Data
+typedef struct _Object_Power_Data
 {
 	int8_t leg1Status, leg2Status, leg3Status, capStatus;
-	droplet_id_type dropletID;
+} ObjectPowerData;
 
-} DropletCompData;
-
-typedef struct _Droplet_Timing_Data
+typedef struct _Object_Timer_Data
 {
 	float timer[DROPLET_NUM_TIMERS];
 	uint8_t trigger[DROPLET_NUM_TIMERS];
 
-} DropletTimeData;
+} ObjectTimerData;
 
 /**
- * This is a special structure for user-set state variables to track droplet
+ * This is a special structure for user-set state variables to track object
  * behavior over the course of an experiment. It is a convenience struct 
  * which has handles in the DSimDataLogger class for extracting experimental
  * data in the middle of simulation. When writing Droplet programs, you may use 
  * this for tracking and storing useful data.
  */
-typedef struct _Droplet_Status_Data
+typedef struct _Object_Status
 {
 	uint8_t	state_changed,
 			color_changed,
 			msg_sent,
 			msg_recv;
-} DropletStatData;
+} ObjectStatus;
 
 #endif

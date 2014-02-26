@@ -18,7 +18,7 @@ class DropletCustomEight : public DSimDroplet
 private :
 
 public :
-	DropletCustomEight(ObjectPhysicsData *objPhysics);
+	DropletCustomEight(ObjectPhysicsData *phyData);
 	~DropletCustomEight(void);
 
 	

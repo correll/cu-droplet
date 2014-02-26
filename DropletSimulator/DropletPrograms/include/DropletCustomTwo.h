@@ -58,7 +58,7 @@ private :
 	uint8_t color_msg[3];
 	uint8_t group_size, i_am_leader, repeat_discover_msg, collaborators;
 	static const uint8_t led_state_colors[NUM_STATES][3];
-	std::vector<droplet_id_type> unique_ids;
+	std::vector<object_id_t> unique_ids;
 
 	uint8_t rqst_group_size;
 	double task_time, sigmoid_slope;
@@ -79,7 +79,7 @@ private :
 	void reset_values(void);
 
 public :
-	DropletCustomTwo(ObjectPhysicsData *objPhysics);
+	DropletCustomTwo(ObjectPhysicsData *phyData);
 	~DropletCustomTwo(void);
 
 	void DropletInit(void);

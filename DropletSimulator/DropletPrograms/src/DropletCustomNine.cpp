@@ -1,7 +1,7 @@
 #include "DropletCustomNine.h"
 
-DropletCustomNine::DropletCustomNine(ObjectPhysicsData *objPhysics) 
-	: DSimDroplet(objPhysics) 
+DropletCustomNine::DropletCustomNine(ObjectPhysicsData *phyData) 
+	: DSimDroplet(phyData) 
 { return; }
 
 DropletCustomNine::~DropletCustomNine() { return; }

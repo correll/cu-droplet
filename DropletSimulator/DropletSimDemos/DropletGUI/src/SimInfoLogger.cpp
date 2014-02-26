@@ -119,7 +119,7 @@ void SimInfoLogger::printDropletData(simState_t stateInfo)
 	// Messages printed once per droplet per step
 	foreach(dropletStruct_t droplet, stateInfo.dropletData)
 	{
-		fprintf(fp,"%i: ", droplet.dropletID);
+		fprintf(fp,"%i: ", droplet.objectID);
 		if(posFlag)
 		{
 			fprintf(fp,"(%3.4f,%3.4f,%3.4f)  |  ",droplet.origin.x,droplet.origin.y,droplet.origin.z);

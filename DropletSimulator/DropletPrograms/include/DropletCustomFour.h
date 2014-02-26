@@ -26,16 +26,16 @@ private :
 		NOT_IT
 	} state;
 
-	std::vector<droplet_id_type> other_droplets;
+	std::vector<object_id_t> other_droplets;
 	char ack;
 	char marco;
 	char polo;
-	droplet_id_type my_id, target_id;
+	object_id_t my_id, target_id;
 	bool it_init_required, notit_init_required, wait_for_ack, toggle;
 public :
-	DropletCustomFour(ObjectPhysicsData *objPhysics);
+	DropletCustomFour(ObjectPhysicsData *phyData);
 	~DropletCustomFour(void);
-	std::map<droplet_id_type,bool> droplet_status;
+	std::map<object_id_t,bool> droplet_status;
 	void acquireNewTarget();
 	void DropletInit(void);
 	void DropletMainLoop(void);

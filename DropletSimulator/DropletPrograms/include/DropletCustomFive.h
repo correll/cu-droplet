@@ -29,7 +29,7 @@ private :
 		SET
 	}state;
 
-	droplet_id_type target;
+	object_id_t target;
 	uint8_t *neighbors;
 	uint8_t slot_num, slots_needed, slots_set;
 	uint8_t guitar_id, row_num, num_in_row;
@@ -41,7 +41,7 @@ private :
 	uint8_t get_num_in_row(uint8_t guitar_id);
 
 public :
-	DropletCustomFive(ObjectPhysicsData *objPhysics);
+	DropletCustomFive(ObjectPhysicsData *phyData);
 	~DropletCustomFive(void);
 
 	
